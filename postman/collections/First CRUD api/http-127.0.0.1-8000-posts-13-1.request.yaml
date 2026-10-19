@@ -1,0 +1,11 @@
+$kind: http-request
+name: http://127.0.0.1:8000/posts/13
+description: ""
+url: http://127.0.0.1:8000/posts/70353
+method: GET
+body:
+  type: json
+  content: |-
+    { "name":"jan",
+        "age": 12}
+order: 2468620803302929
