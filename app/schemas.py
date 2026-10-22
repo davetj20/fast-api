@@ -24,9 +24,17 @@ class Users(BaseModel):
 
 
 class Respsonse_Users(BaseModel):
-    email: Optional[EmailStr]= None  # noqa: UP045
+    email: Optional[EmailStr]= None
     id:int
     time:datetime
     class Config:
         orm= True
         arbitrary_types_allowed=True  
+
+
+
+class Token(BaseModel):
+    data:str 
+    token_type:str
+
+
