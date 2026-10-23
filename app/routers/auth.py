@@ -8,7 +8,7 @@ from .. import database, models, schemas, utils  # noqa: F401
 
 routers = APIRouter(tags=["Authentication"])
 
-@routers.get("/login")
+@routers.post("/login")
 def login(user:OAuth2PasswordRequestForm = Depends() , db:Session= Depends (database.get_db)):  # noqa: B008
     user_obj = db.query(models.Users).filter(models.Users.email == user.username).first()
     if user_obj is None:
