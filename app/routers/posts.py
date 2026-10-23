@@ -10,7 +10,8 @@ routers = APIRouter(prefix="/posts" , tags=["Posts"])
 
 
 @routers.get("/" , response_model= typing.List[schemas.Respsonse_Post])  # noqa: UP006
-def total_posts(db:Session= Depends(get_db)):  # noqa: B008
+def total_posts(db:Session= Depends(get_db) , user_id : int = Depends(oauth2.get_current_user)):  # noqa: B008
+    print(user_id)
     post = db.query(models.Post).all()
     return post
 
