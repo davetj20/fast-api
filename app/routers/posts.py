@@ -3,7 +3,7 @@ import typing
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
 
-from .. import models, schemas
+from .. import models, oauth2, schemas
 from ..database import get_db
 
 routers = APIRouter(prefix="/posts" , tags=["Posts"])
@@ -27,11 +27,12 @@ def get_post(id:int , db:Session= Depends(get_db)):  # noqa: B008
 
 
 
-@routers.post("/" , status_code=status.HTTP_201_CREATED , response_model= schemas.Respsonse_Post)
-def create_post(post:schemas.Post, db:Session= Depends(get_db)):  # noqa: B008
+@routers.post("/" , status_code=status.HTTP_201_CREATED , response_model= schemas.Respsonse_Post )
+def create_post(post:schemas.Post, db:Session= Depends(get_db), user_id : int = Depends(oauth2.get_current_user)):  # noqa: B008
     # cur.execute("""INSERT INTO posts(name,age,likes) VALUES (%s,%s,%s) RETURNING * """, (post.name,post.age,post.likes))
     # p= cur.fetchone()
     # conn.commit()
+    print(user_id)
     p = models.Post(**post.dict())
     db.add(p)
     db.commit()

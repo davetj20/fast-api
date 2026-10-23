@@ -8,7 +8,7 @@ from .. import database, models, schemas, utils  # noqa: F401
 
 routers = APIRouter(tags=["Authentication"])
 
-@routers.post("/login")
+@routers.get("/login")
 def login(user:OAuth2PasswordRequestForm = Depends() , db:Session= Depends (database.get_db)):  # noqa: B008
     user_obj = db.query(models.Users).filter(models.Users.email == user.username).first()
     if user_obj is None:
@@ -17,6 +17,6 @@ def login(user:OAuth2PasswordRequestForm = Depends() , db:Session= Depends (data
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN , detail="INVALID CREDENTIALS")
     else :
         token = oauth2.create_token( {"user_id" :user_obj.id})
-        return {"token": token}
+        return {"access_token": token, "token_type": "bearer"}
 
 
