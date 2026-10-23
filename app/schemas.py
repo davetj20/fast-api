@@ -34,7 +34,7 @@ class Respsonse_Users(BaseModel):
 
 
 class Token(BaseModel):
-    data:str 
+    access_token :str 
     token_type:str
 
 
