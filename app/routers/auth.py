@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from app import oauth2
 
-from .. import database, models, schemas, utils  # noqa: F401
+from .. import database, models, schemas, utils
 
 routers = APIRouter(tags=["Authentication"])
 
