@@ -9,7 +9,7 @@ from app import schemas  # noqa: F401
 ouath2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 SECRET_KEY = "heLLO"
-ALGORITHIM = "HS256"
+ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 def create_token(data:dict):
@@ -19,24 +19,24 @@ def create_token(data:dict):
 
     to_encode.update({ "exp" : expire})
 
-    encoded_jwt = jwt.encode(to_encode , SECRET_KEY , ALGORITHIM )
+    encoded_jwt = jwt.encode(to_encode , SECRET_KEY , ALGORITHM)
 
     return encoded_jwt
 
-def verify_token(token : str , credientials_exception):
+def verify_token(token : str , credentials_exception):
     try:
-        decoded_token = jwt.decode(token , SECRET_KEY , ALGORITHIM)
-        id:str  = decoded_token.get("user_id")
+        decoded_token = jwt.decode(token , SECRET_KEY , [ALGORITHM])
+        id = decoded_token.get("user_id")
         if id is None :
-            raise  credientials_exception
+            raise  credentials_exception
         token_data = schemas.TokenData(id=id)
     except JWTError :
-        raise credientials_exception
+        raise credentials_exception
     return token_data
 
 
 def get_current_user(token:str = Depends(ouath2_scheme)):
-    credientials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED , detail="could not validate " , headers={"WWW-AUthenticate" : "Bearer"} )
+    credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED , detail="could not validate " , headers={"WWW-AUthenticate" : "Bearer"} )
 
-    return verify_token( token , credientials_exception = credientials_exception)
+    return verify_token( token , credentials_exception = credentials_exception)
 
