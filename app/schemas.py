@@ -24,7 +24,7 @@ class Users(BaseModel):
 
 
 class Respsonse_Users(BaseModel):
-    email: Optional[EmailStr]= None
+    email: EmailStr | None= None
     id:int
     time:datetime
     class Config:
@@ -36,5 +36,10 @@ class Respsonse_Users(BaseModel):
 class Token(BaseModel):
     data:str 
     token_type:str
+
+
+class TokenData(BaseModel):
+    id: int|None = None
+    exp : int | None = None 
 
 
