@@ -10,8 +10,8 @@ routers = APIRouter(prefix="/posts" , tags=["Posts"])
 
 
 @routers.get("/" , response_model= typing.List[schemas.Respsonse_Post])  # noqa: UP006
-def total_posts(db:Session= Depends(get_db) , user_id : int = Depends(oauth2.get_current_user)):  # noqa: B008
-    print(user_id)
+def total_posts(db:Session= Depends(get_db) , current_user: models.Users = Depends(oauth2.get_current_user)):  # noqa: B008
+    print(current_user)
     post = db.query(models.Post).all()
     return post
 
@@ -29,12 +29,11 @@ def get_post(id:int , db:Session= Depends(get_db), user_id : int = Depends(oauth
 
 
 @routers.post("/" , status_code=status.HTTP_201_CREATED , response_model= schemas.Respsonse_Post )
-def create_post(post:schemas.Post, db:Session= Depends(get_db), user_id : int = Depends(oauth2.get_current_user)):  # noqa: B008
+def create_post(post:schemas.Post, db:Session= Depends(get_db), user : int = Depends(oauth2.get_current_user)):  # noqa: B008
     # cur.execute("""INSERT INTO posts(name,age,likes) VALUES (%s,%s,%s) RETURNING * """, (post.name,post.age,post.likes))
     # p= cur.fetchone()
     # conn.commit()
-    print(user_id)
-    p = models.Post(**post.dict())
+    p = models.Post(user_id = user.id ,**post.dict() )
     db.add(p)
     db.commit()
     db.refresh(p)

@@ -14,6 +14,7 @@ class Post(BaseModel):
 class Respsonse_Post(Post):
     id:int
     time:datetime
+    user_id: int
     class Config:
         orm= True
         arbitrary_types_allowed=True
