@@ -41,26 +41,29 @@ def create_post(post:schemas.Post, db:Session= Depends(get_db), user : int = Dep
 
 
 @routers.delete("/{id}",status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(id: int , db:Session= Depends(get_db), user_id : int = Depends(oauth2.get_current_user)):  # noqa: B008
+def delete_post(id: int , db:Session= Depends(get_db), user : int = Depends(oauth2.get_current_user)):  # noqa: B008
     # cur.execute("""DELETE FROM posts WHERE id = %s RETURNING *""",(str(id)))
     # p = cur.fetchone()
-    print(user_id)
+    print(user)
     post = db.query(models.Post).filter(models.Post.id == id)
     p = post.first()
     if  p is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail=f"Post with{id} not found ")
+    if p.user_id != user.id :
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED , detail="Invalid Credi=entials")
     db.delete(p)
     db.commit()
     return  Response(status_code=status.HTTP_204_NO_CONTENT)
 
 @routers.put("/{id}", response_model= schemas.Respsonse_Post)
-def update_post(id:int , post: schemas.Post, db:Session= Depends(get_db), user_id : int = Depends(oauth2.get_current_user)):  # noqa: B008
-    print(user_id)
+def update_post(id:int , post: schemas.Post, db:Session= Depends(get_db), user : int = Depends(oauth2.get_current_user)):  # noqa: B008
     p_query= db.query(models.Post).filter(models.Post.id == id)
     p = p_query.first()
 
     if  p  is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail=f"Post with{id} not found ")
+    if p.user_id != user.id :
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED , detail="Invalid Credi=entials")
     p_query.update(post.dict(), synchronize_session= False)
     db.commit()
     db.refresh(p)
