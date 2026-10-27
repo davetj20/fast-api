@@ -11,13 +11,6 @@ class Post(BaseModel):
     published:bool | None= None 
 
 
-class Respsonse_Post(Post):
-    id:int
-    time:datetime
-    user_id: int
-    class Config:
-        orm= True
-        arbitrary_types_allowed=True
 
 class Users(BaseModel):
     email: Optional[EmailStr]= None  # noqa: UP045
@@ -31,6 +24,17 @@ class Respsonse_Users(BaseModel):
     class Config:
         orm= True
         arbitrary_types_allowed=True  
+
+
+
+class Respsonse_Post(Post):
+    id:int
+    time:datetime
+    user_id: int
+    user : Respsonse_Users
+    class Config:
+        orm= True
+        arbitrary_types_allowed=True
 
 
 

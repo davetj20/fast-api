@@ -13,17 +13,19 @@ routers = APIRouter(prefix="/posts" , tags=["Posts"])
 def total_posts(db:Session= Depends(get_db) , current_user: models.Users = Depends(oauth2.get_current_user)):  # noqa: B008
     print(current_user)
     post = db.query(models.Post).all()
+    if post is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail="NO posts exist")
     return post
 
 
 
 
 @routers.get("/{id}",status_code=status.HTTP_200_OK , response_model=schemas.Respsonse_Post )
-def get_post(id:int , db:Session= Depends(get_db), user_id : int = Depends(oauth2.get_current_user)):  # noqa: B008
-    print(user_id)
+def get_post(id:int , db:Session= Depends(get_db), user : int = Depends(oauth2.get_current_user)):  # noqa: B008
+    print(user)
     p = db.query(models.Post).filter(models.Post.id== id).first()
     if p is None :
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail=f"post not found with {id}")        
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail=f"post not found with {id}")
     return p 
 
 

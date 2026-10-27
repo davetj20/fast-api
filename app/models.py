@@ -1,8 +1,17 @@
 
 
 from sqlalchemy import TIMESTAMP, Boolean, Column, ForeignKey, Integer, String, text
+from sqlalchemy.orm import relationship
 
 from .database import Base
+
+
+class Users (Base):
+    __tablename__ = "users"
+    id = Column(Integer , primary_key= True , nullable=False)
+    time = Column(TIMESTAMP(timezone=True),nullable=False , server_default=text('now()'))
+    email = Column(String , nullable= False , unique= True)
+    password = Column(String , nullable= False)     
 
 
 class Post (Base):
@@ -14,12 +23,4 @@ class Post (Base):
     like = Column(Integer , nullable= True , server_default= '0' )
     time = Column(TIMESTAMP(timezone=True),nullable=False , server_default=text('now()'))
     user_id = Column(Integer, ForeignKey("users.id",ondelete="CASCADE"), nullable=False)
-
-
-class Users (Base):
-    __tablename__ = "users"
-    id = Column(Integer , primary_key= True , nullable=False)
-    time = Column(TIMESTAMP(timezone=True),nullable=False , server_default=text('now()'))
-    email = Column(String , nullable= False , unique= True)
-    password = Column(String , nullable= False)     
-    
+    user = relationship(Users)
