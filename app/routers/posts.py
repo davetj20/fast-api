@@ -11,7 +11,7 @@ routers = APIRouter(prefix="/posts" , tags=["Posts"])
 
 @routers.get("/" , response_model= typing.List[schemas.Respsonse_Post])  # noqa: UP006
 def total_posts(db:Session= Depends(get_db) , current_user: models.Users = Depends(oauth2.get_current_user)):  # noqa: B008
-    print(current_user)
+    print(current_user.id)
     post = db.query(models.Post).all()
     if post is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail="NO posts exist")
