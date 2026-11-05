@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel, EmailStr
+from pydantic.types import conint
 
 
 class Post(BaseModel):
@@ -48,3 +49,6 @@ class TokenData(BaseModel):
     
 
 
+class Vote(BaseModel):
+    post_id:int
+    diff:conint(ge=-1,le=1) # type: ignore

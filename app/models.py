@@ -24,3 +24,9 @@ class Post (Base):
     time = Column(TIMESTAMP(timezone=True),nullable=False , server_default=text('now()'))
     user_id = Column(Integer, ForeignKey("users.id",ondelete="CASCADE"), nullable=False)
     user = relationship(Users)
+
+
+class Votes (Base):
+    __tablename__ ="votes" 
+    post_id = Column(Integer, ForeignKey("posts.id", ondelete="CASCADE"), primary_key=True, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True, nullable=False)
