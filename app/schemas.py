@@ -52,3 +52,12 @@ class TokenData(BaseModel):
 class Vote(BaseModel):
     post_id:int
     diff:conint(ge=-1,le=1) # type: ignore
+
+
+class RPost_With_Vote(BaseModel):
+    Post:Respsonse_Post
+    vote:int
+    class Config:
+        orm= True
+        arbitrary_types_allowed=True
+

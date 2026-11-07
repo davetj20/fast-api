@@ -1,6 +1,7 @@
 import typing
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from .. import models, oauth2, schemas
@@ -9,10 +10,10 @@ from ..database import get_db
 routers = APIRouter(prefix="/posts" , tags=["Posts"])
 
 
-@routers.get("/" , response_model= typing.List[schemas.Respsonse_Post])  # noqa: UP006
+@routers.get("/" , response_model= typing.List[schemas.RPost_With_Vote])  # noqa: UP006
 def total_posts(db:Session= Depends(get_db) , current_user: models.Users = Depends(oauth2.get_current_user)):  # noqa: B008
     print(current_user.id)
-    post = db.query(models.Post).all()
+    post = db.query(models.Post ,func.count(models.Votes.post_id).label("vote") ).join(models.Votes , models.Post.id == models.Votes.post_id , isouter=True).group_by(models.Post.id).all()
     if post is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail="NO posts exist")
     return post
@@ -20,10 +21,10 @@ def total_posts(db:Session= Depends(get_db) , current_user: models.Users = Depen
 
 
 
-@routers.get("/{id}",status_code=status.HTTP_200_OK , response_model=schemas.Respsonse_Post )
+@routers.get("/{id}",status_code=status.HTTP_200_OK , response_model=schemas.RPost_With_Vote )
 def get_post(id:int , db:Session= Depends(get_db), user : int = Depends(oauth2.get_current_user)):  # noqa: B008
     print(user)
-    p = db.query(models.Post).filter(models.Post.id== id).first()
+    p = db.query(models.Post ,func.count(models.Votes.post_id).label("vote") ).join(models.Votes , models.Post.id == models.Votes.post_id , isouter=True).group_by(models.Post.id).first()
     if p is None :
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail=f"post not found with {id}")
     return p 

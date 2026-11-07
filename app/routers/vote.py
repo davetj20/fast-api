@@ -1,6 +1,5 @@
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from httptools import HttpParserCallbackError
 from sqlalchemy.orm import Session
 
 from .. import models, oauth2, schemas
