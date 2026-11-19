@@ -8,7 +8,6 @@ from pydantic.types import conint
 class Post(BaseModel):
     title: Optional[str]= None  # noqa: UP045
     content: str | None = None
-    like: int | None=None
     published:bool | None= None 
 
 

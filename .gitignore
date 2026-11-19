@@ -1,4 +1,12 @@
 __pycache__/
+*.pyc
 venv/
+.venv/
 .env
-
+.env.*
+!.env.example
+.vscode/
+.idea/
+.DS_Store
+.postman/
+postman/
